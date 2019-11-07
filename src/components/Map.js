@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GoogleMap, withScriptjs, withGoogleMap, Marker, InfoWindow } from 'react-google-maps'
 import { data } from '../data'
-
+ 
 function Map(){
   const [selectedPark, setSelectedPark] = useState(null)
 
