@@ -1,40 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GoogleMap, withScriptjs, withGoogleMap, Marker, InfoWindow } from 'react-google-maps'
 import { data } from '../data'
- 
+
 function Map(){
-  const [selectedPark, setSelectedPark] = useState(null)
+  const [restaurants, setRestaurants] = useState([])
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null)
+
+  useEffect(() => {
+    fetch('http://localhost:3001/restaurants')
+      .then(res => res.json())
+      .then(restaurants => {
+        setRestaurants(restaurants)
+
+      })
+    //
+
+  }, [])
 
  return (
    <GoogleMap
-     defaultZoom={10}
-     defaultCenter={{ lat: 45.421532, lng: -75.697189 }}
+     defaultZoom={13}
+     defaultCenter={{ lat: 40.712772, lng: -74.006058 }}
     >
-      { data.map(park => (< Marker
-        key={park.properties.PARK_ID}
+      { restaurants.map(restaurant => (< Marker
+        key={restaurant.id}
         position={{
-          lat: park.geometry.coordinates[1],
-          lng: park.geometry.coordinates[0]
+          lat: parseFloat(restaurant.latitude),
+          lng: parseFloat(restaurant.longitude)
         }}
         onClick={ () => {
-          setSelectedPark(park)
+          setSelectedRestaurant(restaurant)
         }}
         />
       ))}
 
-      { selectedPark && (
+      { selectedRestaurant && (
         < InfoWindow
         position={{
-          lat: selectedPark.geometry.coordinates[1],
-          lng: selectedPark.geometry.coordinates[0]
+          lat: parseFloat(selectedRestaurant.latitude),
+          lng: parseFloat(selectedRestaurant.longitude)
         }}
-        onCloseClick={() => setSelectedPark(null) }
+        onCloseClick={() => setSelectedRestaurant(null) }
         >
           <div>
-            <h2>Restaurant Name</h2>
-            <p>Restaurant Address</p>
-            <p>Restaurant Price</p>
-            <button>Click me!</button>
+            <h2>{selectedRestaurant.name}</h2>
+            <p>{selectedRestaurant.address}</p>
+            <p>{selectedRestaurant.category}</p>
+            <button>See best dishes</button>
 
           </div>
 
