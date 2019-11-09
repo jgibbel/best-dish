@@ -66,13 +66,12 @@ function Dishes() {
     fetch('http://localhost:3001/dishes')
       .then(res => res.json())
       .then(dishes => {
-        debugger;
         setDishes(dishes.filter(dish => dish.restaurant_id == id))
         
       })
     //
 
-  }, [])
+  })
 
   return(
     <>
