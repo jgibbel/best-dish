@@ -1,6 +1,5 @@
 import React from 'react';
 // import { GoogleMap, withScriptjs, withGoogleMap } from 'react-google-maps'
-import { data } from './data'
 import {Switch, Route, BrowserRouter as Router} from 'react-router-dom'
 import Login from "./Login"
 import HomePage from './Home'
@@ -11,7 +10,6 @@ export default class App extends React.Component {
   state = {
     token: null,
     loggedInUserId: null,
-    restaurant: null
   }
 
   // componentDidMount(){
@@ -34,11 +32,18 @@ export default class App extends React.Component {
   render() {
     return (
       <Router>
+        
+          <HomePage/>
+          { this.state.loggedInUserId ? null : <Login gotToken={this.gotToken}/> }
+
         <Switch>
-          <Route exact path="/" render={(props) => <HomePage/> }/>
-          <Route exact path="/login" render={(props) => <Login {...props} gotToken={this.gotToken}/>}/>
+
+          <Route path="/:id">
+            <RestaurantModal />
+          </Route>
+        
         </Switch>
-        { this.state.restaurant ? <RestaurantModal restaurant={this.state.restaurant}/> : null }
+
       </Router>
     );
   }

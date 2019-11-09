@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, withScriptjs, withGoogleMap, Marker, InfoWindow } from 'react-google-maps'
+import {Link} from 'react-router-dom'
 
 function Map(){
   const [restaurants, setRestaurants] = useState([])
@@ -45,7 +46,7 @@ function Map(){
             <h2>{selectedRestaurant.name}</h2>
             <p>{selectedRestaurant.address}</p>
             <p>{selectedRestaurant.category}</p>
-            <button onClick={this.props.handleClick}>See best dishes</button>
+            <Link to={"/" + selectedRestaurant.id} >See best dishes</Link>
 
           </div>
 

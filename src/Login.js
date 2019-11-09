@@ -30,6 +30,7 @@ class LogIn extends React.Component {
       })
     }).then(res => res.json())
     .then(data => {
+      debugger;
       if (data.errors) {
         this.setState({
           errors: data.errors
@@ -60,7 +61,6 @@ class LogIn extends React.Component {
         })
       } else {
         this.props.gotToken(data.token, data.user_id)
-        this.props.history.push('/')
       }
     })
     // when fetch is done...get token
@@ -68,8 +68,9 @@ class LogIn extends React.Component {
   }
 
   render(){
-    return (<>
+    return (
       <div className="loginModal">
+        <div className="modal-content">
       <ul>
         {
           this.state.errors.map(error => <li>{ error }</li>)
@@ -106,7 +107,7 @@ class LogIn extends React.Component {
             <input  id="sign_up_username"
                     type="text"
                     onChange={ this.onChange }
-                    name="username"
+                    name="name"
                     value={ this.state.username } />
             <label  htmlFor="sign_up_password">Password</label>
             <input  id="sign_up_password"
@@ -119,7 +120,8 @@ class LogIn extends React.Component {
         </section>
       }
       </div>
-    </>)
+      </div>
+    )
   }
 
 }
