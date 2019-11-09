@@ -38,7 +38,7 @@ export default class App extends React.Component {
           <Route exact path="/" render={(props) => <HomePage/> }/>
           <Route exact path="/login" render={(props) => <Login {...props} gotToken={this.gotToken}/>}/>
         </Switch>
-        {this.state.restaurant ? <RestaurantModal restaurant={this.state.restaurant} : null />}
+        { this.state.restaurant ? <RestaurantModal restaurant={this.state.restaurant}/> : null }
       </Router>
     );
   }
