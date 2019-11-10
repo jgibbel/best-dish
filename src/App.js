@@ -4,6 +4,7 @@ import {Switch, Route, BrowserRouter as Router} from 'react-router-dom'
 import Login from "./Login"
 import HomePage from './Home'
 import RestaurantModal from './RestaurantModal'
+import Nav from './Nav'
 
 export default class App extends React.Component {
 
@@ -12,11 +13,9 @@ export default class App extends React.Component {
     loggedInUserId: null,
   }
 
-  // componentDidMount(){
-  //   this.setState({
-  //     restaurants: data
-  //   }, () => console.log(this.state.restaurants))
-  // }
+  componentDidMount(){
+    // debugger;
+  }
 
   //Embed WrappedMap variable and set default props
   gotToken = (token, loggedInUserId) => {
@@ -32,9 +31,8 @@ export default class App extends React.Component {
   render() {
     return (
       <Router>
-        
           <HomePage/>
-          { localStorage.token || this.state.loggedInUserId ? null : <Login gotToken={this.gotToken}/> }
+          { localStorage.token || this.state.loggedInUserId ? <Nav /> : <Login gotToken={this.gotToken}/> }
 
         <Switch>
 

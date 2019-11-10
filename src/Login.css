@@ -18,3 +18,16 @@
     border: 1px solid #888;
     width: 80%;
   }
+
+.fixedNav {
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding: 10px; /* Location of the box */
+        left: 2%;
+        top: 2%;
+        /* width: 20%; Full width */
+        /* height: 25%; Full height */
+        overflow: auto; /* Enable scroll if needed */ 
+        background-color: #fefefe;  
+
+}
