@@ -9,7 +9,7 @@ import RestaurantsList from './RestaurantsList'
 
 export default class MapPage extends React.Component {
 
-  //Eventualy, arrange container for Map display with inline styling
+  //Eventually, arrange container for Map display with inline styling
   render() {
 
     return (

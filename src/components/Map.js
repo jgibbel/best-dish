@@ -1,3 +1,4 @@
+import { RestaurantInfoWindow } from './RestaurantInfoWindow';
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, withScriptjs, withGoogleMap, Marker, InfoWindow } from 'react-google-maps'
 import { data } from '../data'
@@ -35,14 +36,7 @@ function Map(){
         }}
         onCloseClick={() => setSelectedRestaurant(null) }
         >
-          <div>
-            <h2>Restaurant Name</h2>
-            <p>Restaurant Address</p>
-            <p>Restaurant Price</p>
-            <button>Click me!</button>
-          </div>
-
-
+          <RestaurantInfoWindow name={selectedRestaurant.name} address={selectedRestaurant.address} url={selectedRestaurant.url}     />
         </InfoWindow>
       )}
 
@@ -54,8 +48,8 @@ export const WrappedMap = withScriptjs(withGoogleMap(Map));
 
 
 
-// Create default canvas usind GoogleMap component and stablish default values
+// Create default canvas using GoogleMap component and stablish default values
 // Create WrappedMap variable and assign it to a function imported from 'react-google-maps'
-// withScriptjs() takes withGoogleMap() as a callback wich has the return of Map()
+// withScriptjs() takes withGoogleMap() as a callback which has the return of Map()
 // import Marker and change its attributes based on each choice
-// /* Use of hooks*/
+/* Use of hooks*/

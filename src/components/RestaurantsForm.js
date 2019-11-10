@@ -1,38 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
+export default function RestaurantsForm(){
 
-export default class RestaurantsForm extends React.Component {
-
-  state = {
-    location: '',
-    category: ''
-  }
-
-  onChangeLocation = (e) => {
-    let location = e.target.value
-    this.setState({
-      location
-    })
-  }
-
-  onChangeCategory = (e)=> {
-    let category = e.target.value
-    this.setState({
-      category
-    })
-  }
+  const [location, setLocation] = useState('')
+  const [category, setCategory] = useState('')
 
 
-
-  render(){
     return (
       <FormDiv>
           <form className="form" id="search-form" action="index.html" method="post">
           <div className='row'>
             <div className="col">
               <label htmlFor="">Query by Borough</label>
-              <select name="location" id="" defaultValue={'DEFAULT'} onChange={this.onChangeLocation} >
+              <select name="location" id="" defaultValue={'DEFAULT'} onChange={(e) => setLocation(e.target.value)} >
                 <option value="DEFAULT" disabled>Select a location</option>
                 <option value="manhattan">Manhattan</option>
                 <option value="queens">Queens</option>
@@ -43,7 +24,7 @@ export default class RestaurantsForm extends React.Component {
               </div>
               <div className='col'>
                 <label htmlFor="">Restaurant Category</label>
-                <select name="category" id="" defaultValue={'DEFAULT'} onChange={this.onChangeCategory}>
+                <select name="category" id="" defaultValue={'DEFAULT'} onChange={(e) => setCategory(e.value.target) }>
                   <option value="DEFAULT" disabled >Category</option>
                   <option value="brunch">Brunch</option>
                   <option value="burger">Burger</option>
@@ -59,8 +40,8 @@ export default class RestaurantsForm extends React.Component {
           </form>
       </FormDiv>
     )
-  }
 }
+
 const FormDiv = styled.div`
 .row{
   margin: auto;
