@@ -34,7 +34,7 @@ export default class App extends React.Component {
       <Router>
         
           <HomePage/>
-          { this.state.loggedInUserId ? null : <Login gotToken={this.gotToken}/> }
+          { localStorage.token || this.state.loggedInUserId ? null : <Login gotToken={this.gotToken}/> }
 
         <Switch>
 

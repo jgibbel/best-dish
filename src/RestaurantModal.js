@@ -39,10 +39,7 @@ function RestaurantModal() {
               <p>{restaurantCategory}</p>
               <p>{restaurantBorough}</p>
             </div>
-            <Dishes />
-            <AddDish id={id}/>
-            
-            
+            <Dishes id={id}/>
             <div><p>.</p><p>.</p></div>
             <div><p>.</p><p>.</p></div>
             <div><p>.</p><p>.</p></div>
@@ -57,59 +54,37 @@ export default RestaurantModal
 
 ////////////////////////////////////////
 
-function Dishes() {
-  const [dishes, setDishes] = useState([])
-  const [selectedDish, setSelectedDish] = useState(null)
-  let {id} = useParams();
-
-  useEffect(() => {
-    fetch('http://localhost:3001/dishes')
-      .then(res => res.json())
-      .then(dishes => {
-        setDishes(dishes.filter(dish => dish.restaurant_id == id))
-        
-      })
-    //
-
-  })
-
-  return(
-    <>
-    {dishes.map(
-      dish => {
-        return(<p>{dish.name}</p>)
-      }
-    )}
-    </>
-    )
-
-}
-
-
-
-
-
-///////////////////////////////////////
-
-class AddDish extends React.Component {
-
+class Dishes extends React.Component {
   state = {
+    dishes: [],
     clicked: false,
-    name: "",
+    submitDishName: "",
     errors: []
   }
 
-  onChange = event => {
-    this.setState({
-      name: event.target.value
-    })
-  }
+  componentDidMount() {
+      fetch(`http://localhost:3001/restaurants/${this.props.id}`)
+      .then(res => res.json())
+      .then(restaurant => {
+        this.setState({
+          dishes: restaurant.dishes
+        })
+         })
 
-  clicked = event => {
-    this.setState({
-      clicked: true
-    })
-  }
+        
+    }
+
+    onChange = event => {
+      this.setState({
+        submitDishName: event.target.value
+      })
+    }
+  
+    clicked = event => {
+      this.setState({
+        clicked: true
+      })
+    }
 
   dishSubmitted = (event) => {
     event.preventDefault()
@@ -120,12 +95,11 @@ class AddDish extends React.Component {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        name: this.state.name,
+        name: this.state.submitDishName,
         restaurant_id: this.props.id
       })
     }).then(res => res.json())
     .then(data => {
-      debugger;
       if (data.errors) {
         this.setState({
           errors: data.errors
@@ -134,27 +108,36 @@ class AddDish extends React.Component {
         this.setState({
           clicked: false
         })
+        this.componentDidMount()
       }
     })
   }
+  
 
+  render(){
+      return(<>
+        <div className="dishesDisplay">
+          {this.state.dishes.map((dish) => {
+            return(
+              <p>{dish.name} {dish.votes_count}</p>
+            )
+          })}
+        </div>
+        { this.state.clicked 
+          ? 
+            <form onSubmit={ this.dishSubmitted }>
+              <label  htmlFor="name">Dish Name</label>
+              <input  id="name"
+                      type="text"
+                      onChange={ this.onChange /* for controlled form input status */ }
+                      name="name"
+                      value={ this.state.name /* for controlled form input status */ } />
+              <input type="submit" />
+            </form>
+          : <button onClick={this.clicked}>Add Dish</button>
+        }
 
-  render() {
-    return(
-      <>
-      { this.state.clicked 
-        ? 
-          <form onSubmit={ this.dishSubmitted }>
-            <label  htmlFor="name">Dish Name</label>
-            <input  id="name"
-                    type="text"
-                    onChange={ this.onChange /* for controlled form input status */ }
-                    name="name"
-                    value={ this.state.name /* for controlled form input status */ } />
-            <input type="submit" />
-          </form>
-        : <button onClick={this.clicked}>Add Dish</button>
-      }
-      </>
-  )}
+      </>)
+    }
+
 }
