@@ -32,10 +32,6 @@ export default class App extends React.Component {
    })
  }
 
- handleVote = event => {
-  console.log("vote")
-  debugger
-}
 
   render() {
     return (
@@ -47,8 +43,10 @@ export default class App extends React.Component {
         <Switch>
 
           <Route path="/:id">
-            <RestaurantModal userId={this.state.loggedInUserId} handleVote={this.handleVote} />
+            <RestaurantModal userId={this.state.loggedInUserId} />
           </Route>
+
+          
         
         </Switch>
 
