@@ -5,12 +5,13 @@ import {
 } from "react-router-dom";
 
 
-function RestaurantModal() {
+function RestaurantModal(props) {
   const [restaurantName, setRestaurantName] = useState(null)
   const [restaurantAddress, setRestaurantAddress] = useState(null)
   const [restaurantImage, setRestaurantImage] = useState(null)
   const [restaurantCategory, setRestaurantCategory] = useState(null)
   const [restaurantBorough, setRestaurantBorough] = useState(null)
+  const [hasVoted, setHasVoted] = useState(null)
 
   let {id} = useParams();
 
@@ -23,9 +24,14 @@ function RestaurantModal() {
         setRestaurantImage(rest.image)
         setRestaurantCategory(rest.category)
         setRestaurantBorough(rest.borough)
-      })
+      }),
     //
-
+    fetch(`http://localhost:3001/votes`)
+    .then(res => res.json())
+    .then(r => {
+      // debugger
+      null
+    })
   }, [])
     return (
       <div className="loginModal">
@@ -39,7 +45,7 @@ function RestaurantModal() {
               <p>{restaurantCategory}</p>
               <p>{restaurantBorough}</p>
             </div>
-            <Dishes id={id}/>
+            <Dishes id={id} handleVote={props.handleVote}/>
             <div><p>.</p><p>.</p></div>
             <div><p>.</p><p>.</p></div>
             <div><p>.</p><p>.</p></div>
@@ -86,6 +92,7 @@ class Dishes extends React.Component {
       })
     }
 
+
   dishSubmitted = (event) => {
     event.preventDefault()
     // make a fetch
@@ -116,13 +123,21 @@ class Dishes extends React.Component {
 
   render(){
       return(<>
+
         <div className="dishesDisplay">
+
           {this.state.dishes.map((dish) => {
             return(
-              <p>{dish.name} {dish.votes_count}</p>
+              <>
+              <p>{dish.name} {dish.votes_count}</p><button value={dish.id} onClick={this.props.handleVote}>Vote</button>
+              </>
             )
           })}
         </div>
+
+
+
+
         { this.state.clicked 
           ? 
             <form onSubmit={ this.dishSubmitted }>

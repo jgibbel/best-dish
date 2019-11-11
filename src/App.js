@@ -11,6 +11,8 @@ export default class App extends React.Component {
   state = {
     token: null,
     loggedInUserId: null,
+    loggedInUserName: null,
+    hasVoted: null
   }
 
   componentDidMount(){
@@ -18,26 +20,34 @@ export default class App extends React.Component {
   }
 
   //Embed WrappedMap variable and set default props
-  gotToken = (token, loggedInUserId) => {
+  gotToken = (token, loggedInUserId, loggedInUserName) => {
    console.log("logged in", token)
    localStorage.token = token
    localStorage.loggedInUserId = loggedInUserId
+   localStorage.loggedInUserName = loggedInUserName
    this.setState({
      token,
-     loggedInUserId
+     loggedInUserId,
+     loggedInUserName
    })
  }
+
+ handleVote = event => {
+  console.log("vote")
+  debugger
+}
 
   render() {
     return (
       <Router>
           <HomePage/>
-          { localStorage.token || this.state.loggedInUserId ? <Nav /> : <Login gotToken={this.gotToken}/> }
-
+          <Route exact path="/">
+          { localStorage.token || this.state.loggedInUserId ? <Nav name={this.state.loggedInUserName}/> : <Login gotToken={this.gotToken}/> }
+          </Route>
         <Switch>
 
           <Route path="/:id">
-            <RestaurantModal />
+            <RestaurantModal userId={this.state.loggedInUserId} handleVote={this.handleVote} />
           </Route>
         
         </Switch>

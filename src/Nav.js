@@ -2,12 +2,12 @@ import React from 'react'
 import './Login.css'
 
 
-function Nav() {
+function Nav(props) {
 
 
     return(
     <div className="fixedNav">
-        <p>Hello user</p>
+        <p>Hello {props.name}</p>
         <p>Filter select here</p>
     </div>)
 

@@ -36,7 +36,8 @@ class LogIn extends React.Component {
           errors: data.errors
         })
       } else {
-        this.props.gotToken(data.token, data.user_id)
+        debugger;
+        this.props.gotToken(data.token, data.user_id, this.state.name)
       }
     })
   }
@@ -60,7 +61,7 @@ class LogIn extends React.Component {
           errors: data.errors
         })
       } else {
-        this.props.gotToken(data.token, data.user_id)
+        this.props.gotToken(data.token, data.user_id, this.state.name)
       }
     })
     // when fetch is done...get token
