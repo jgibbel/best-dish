@@ -12,11 +12,50 @@ export default class App extends React.Component {
     token: null,
     loggedInUserId: null,
     loggedInUserName: null,
-    hasVoted: null
+    hasVoted: null,
+    restaurants: [],
+    favRestaurants: [],
+    sendFav: false
   }
 
   componentDidMount(){
-    // debugger;
+    fetch('http://localhost:3001/restaurants')
+      .then(res => res.json())
+      .then(restaurants => {
+        this.setState({restaurants: restaurants})
+      }) 
+
+    fetch(`http://localhost:3001/users/${localStorage.loggedInUserId}`)
+      .then(res => res.json())
+      .then(user => {
+        console.log(user)
+        if (user.error){
+          return
+        } else {
+          let favRestaurants = user.favorites.map(rest => rest.restaurantObj)
+        this.setState({favRestaurants: favRestaurants})
+        }
+      })
+  }
+
+  componentDidUpdate(){
+    
+  }
+  
+
+  favoriteRestaurants = () => {
+    this.setState({sendFav: true})
+    // this.setState({clickedFavorites: true})
+    // fetch(`http://localhost:3001/users/${localStorage.loggedInUserId}`)
+    //     .then(res => res.json())
+    //     .then(user => {
+    //       let favRestaurants = user.favorites.map(rest => rest.restaurantObj)
+    //       this.setState({favRestaurants: favRestaurants})
+    //     })
+  }
+
+  allRestaurants = ()=> {
+    this.setState({sendFav: false})
   }
 
   //Embed WrappedMap variable and set default props
@@ -33,23 +72,22 @@ export default class App extends React.Component {
  }
 
 
+
+
   render() {
+    const {restaurants, favRestaurants, sendFav} = this.state
+
     return (
       <Router>
-          <HomePage/>
-          <Route exact path="/">
-          { localStorage.token || this.state.loggedInUserId ? <Nav name={this.state.loggedInUserName}/> : <Login gotToken={this.gotToken}/> }
-          </Route>
-        <Switch>
-
-          <Route path="/:id">
-            <RestaurantModal userId={this.state.loggedInUserId} />
-          </Route>
-
-          
-        
+          <HomePage favRestaurants={favRestaurants} allRest={restaurants} restaurants={sendFav ? favRestaurants : restaurants}/>
+          <Switch>
+            <Route exact path="/">
+              { localStorage.token || this.state.loggedInUserId ? <Nav allRestaurants={this.allRestaurants} favoriteRestaurants={this.favoriteRestaurants} name={this.state.loggedInUserName}/> : <Login gotToken={this.gotToken}/> }
+            </Route>
+            <Route path="/:id">
+              <RestaurantModal userId={this.state.loggedInUserId} handleVote={this.handleVote} />
+            </Route>
         </Switch>
-
       </Router>
     );
   }
