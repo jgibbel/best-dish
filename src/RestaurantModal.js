@@ -69,7 +69,8 @@ class Dishes extends React.Component {
     submitDishName: "",
     errors: [],
     hasVoted: null,
-    data: null
+    data: null,
+    myVote: null
   }
 
   async componentDidMount() {
@@ -92,8 +93,10 @@ class Dishes extends React.Component {
         const dishIds = this.state.dishes.map(dish => dish.id)
         const userVotes = votes.filter(vote => vote.user_id === parseInt(this.props.userId))
         const userVoted = userVotes.find(vote => dishIds.includes(vote.dish_id))
+        debugger;
         if (userVoted) {
-          this.setState({hasVoted: true})
+          this.setState({hasVoted: true, myVote: userVoted})
+          
         } else {
           this.setState({hasVoted: false})
         }
@@ -115,6 +118,22 @@ class Dishes extends React.Component {
         clicked: true
       })
     }
+
+    // deleteVote = event => {
+    //   event.preventDefault()
+    
+    //   // make a fetch
+    //   fetch(`http://localhost:3001/votes/${this.state.userVoted.id}`, {
+    //     method: "DELETE",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     }
+    //   })
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     debugger;
+    //   })
+    // }
 
 
   dishSubmitted = (event) => {
@@ -188,7 +207,7 @@ class Dishes extends React.Component {
 
 
 
-        {this.state.hasVoted ? <button>Delete Vote and Add Another Dish</button> :
+        {this.state.hasVoted ? <button onClick={this.deleteVote}>Delete Vote and Add Another Dish</button> :
         <>
         { this.state.clicked 
           ? 

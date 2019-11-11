@@ -38,6 +38,7 @@ class LogIn extends React.Component {
       } else {
         debugger;
         this.props.gotToken(data.token, data.user_id, this.state.name)
+        this.props.mount()
       }
     })
   }
@@ -62,6 +63,7 @@ class LogIn extends React.Component {
         })
       } else {
         this.props.gotToken(data.token, data.user_id, this.state.name)
+        this.props.mount()
       }
     })
     // when fetch is done...get token
