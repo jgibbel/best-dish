@@ -3,12 +3,23 @@ import { GoogleMap, withScriptjs, withGoogleMap, Marker, InfoWindow } from 'reac
 import {Link} from 'react-router-dom'
 
 function Map(props){
-  const {allRest, favRestaurants, restaurants} = props
-  
+
+  console.log(props)
+
+  const {favRestaurants, restaurants, setFavState} = props
   const [selectedRestaurant, setSelectedRestaurant] = useState(null)
 
+  const belongs = (target, array) => {
 
-console.log("inside map.function", props)
+    for(var i = 0; i < array.length; i++) {
+      if(array[i].id === target.id) {
+        return true;
+      }
+    }
+    return false; 
+  }
+ 
+
 
   const addToFavorites = (restaurant) => {
     let user_id = localStorage.loggedInUserId
@@ -27,8 +38,10 @@ console.log("inside map.function", props)
     })
     .then(res => res.json())
     .then(data => {
-      console.log(data)
-      
+      debugger
+      console.log(data.restaurantObj)
+      setSelectedRestaurant(null)
+      setFavState(data.restaurantObj)
     })
   }
 
@@ -37,7 +50,7 @@ console.log("inside map.function", props)
      defaultZoom={13}
      defaultCenter={{ lat: 40.712772, lng: -74.006058 }}
     >
-      { props.restaurants.map(restaurant => (< Marker
+      { restaurants.map(restaurant => (< Marker
         key={restaurant.id}
         position={{
           lat: parseFloat(restaurant.latitude),
@@ -64,7 +77,7 @@ console.log("inside map.function", props)
             <Link to={"/" + selectedRestaurant.id} >See best dishes</Link>
             <button 
             onClick={()=> addToFavorites(selectedRestaurant)} 
-            disabled={favRestaurants.includes(selectedRestaurant)} >Add to favorites</button>
+            disabled={belongs(selectedRestaurant, favRestaurants)} >Add to favorites</button>
           </div>
         </InfoWindow>
       )}

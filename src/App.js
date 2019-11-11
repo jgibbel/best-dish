@@ -74,7 +74,12 @@ export default class App extends React.Component {
  handleVote = event => {
   console.log("vote")
   debugger
-}
+  }
+
+  setFavState = (newRest) => {
+    this.setState({favRestaurants: [...this.state.favRestaurants, newRest]})
+    debugger
+  }
 
 
 
@@ -83,7 +88,7 @@ export default class App extends React.Component {
 
     return (
       <Router>
-          <HomePage favRestaurants={favRestaurants} allRest={restaurants} restaurants={sendFav ? favRestaurants : restaurants}/>
+          <HomePage setFavState={this.setFavState} favRestaurants={favRestaurants} allRest={restaurants} restaurants={sendFav ? favRestaurants : restaurants}/>
           <Switch>
             <Route exact path="/">
               { localStorage.token || this.state.loggedInUserId ? <Nav allRestaurants={this.allRestaurants} favoriteRestaurants={this.favoriteRestaurants} name={this.state.loggedInUserName}/> : <Login gotToken={this.gotToken}/> }
