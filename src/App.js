@@ -29,7 +29,8 @@ export default class App extends React.Component {
       .then(res => res.json())
       .then(user => {
         console.log(user)
-        if (user.error){
+        debugger;
+        if (user.error || user.message) {
           return
         } else {
           let favRestaurants = user.favorites.map(rest => rest.restaurantObj)
