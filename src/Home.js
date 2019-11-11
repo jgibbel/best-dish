@@ -9,6 +9,7 @@ export default class HomePage extends React.Component {
     return(
       <div style={{width: '100vw', height: '100vw'}}>
         <WrappedMap
+          setFavState={this.props.setFavState}
           allRest={this.props.allRest}
           favRestaurants={this.props.favRestaurants} 
           restaurants={this.props.restaurants}
