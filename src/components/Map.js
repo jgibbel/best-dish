@@ -45,6 +45,30 @@ function Map(props){
     })
   }
 
+  const unFavorite = (restaurant) => {
+    let user_id = localStorage.loggedInUserId
+    let restaurant_id =  restaurant.id
+
+    fetch('http://localhost:3001/favorites', {
+      method: 'DESTROY',
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        user_id: user_id,
+        restaurant_id: restaurant_id
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      debugger
+      console.log(data.restaurantObj)
+      setSelectedRestaurant(null)
+      setFavState(data.restaurantObj)
+    })
+  }
+
  return (
    <GoogleMap
      defaultZoom={13}
@@ -75,9 +99,14 @@ function Map(props){
             <p>{selectedRestaurant.address}</p>
             <p>{selectedRestaurant.category}</p>
             <Link to={"/" + selectedRestaurant.id} >See best dishes</Link>
-            <button 
-            onClick={()=> addToFavorites(selectedRestaurant)} 
-            disabled={belongs(selectedRestaurant, favRestaurants)} >Add to favorites</button>
+
+            {belongs(selectedRestaurant, favRestaurants) ? (<button onClick={()=> unFavorite(selectedRestaurant)}>Remove From Favorites</button>)  : (
+              <button onClick={()=> addToFavorites(selectedRestaurant)}>Add to favorites
+              </button>) 
+            }
+            
+
+
           </div>
         </InfoWindow>
       )}

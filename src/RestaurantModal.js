@@ -11,7 +11,6 @@ function RestaurantModal(props) {
   const [restaurantImage, setRestaurantImage] = useState(null)
   const [restaurantCategory, setRestaurantCategory] = useState(null)
   const [restaurantBorough, setRestaurantBorough] = useState(null)
-  const [hasVoted, setHasVoted] = useState(null)
 
   let {id} = useParams();
 
@@ -48,7 +47,7 @@ function RestaurantModal(props) {
               <p>{restaurantCategory}</p>
               <p>{restaurantBorough}</p>
             </div>
-            <Dishes id={id} handleVote={props.handleVote}/>
+            <Dishes userId={props.userId} id={id}/>
             <div><p>.</p><p>.</p></div>
             <div><p>.</p><p>.</p></div>
             <div><p>.</p><p>.</p></div>
@@ -68,17 +67,39 @@ class Dishes extends React.Component {
     dishes: [],
     clicked: false,
     submitDishName: "",
-    errors: []
+    errors: [],
+    hasVoted: null,
+    data: null
   }
 
-  componentDidMount() {
-      fetch(`http://localhost:3001/restaurants/${this.props.id}`)
+  async componentDidMount() {
+  //     fetch(`http://localhost:3001/restaurants/${this.props.id}`)
+  //     .then(res => res.json())
+  //     .then(restaurant => {
+  //       this.setState({
+  //         dishes: restaurant.dishes
+  //       })
+  //        })
+
+      const response = await fetch(`http://localhost:3001/restaurants/${this.props.id}`);
+      const json = await response.json();
+      this.setState({ dishes: json.dishes});
+     
+
+      fetch(`http://localhost:3001/votes`)
       .then(res => res.json())
-      .then(restaurant => {
-        this.setState({
-          dishes: restaurant.dishes
-        })
-         })
+      .then(votes => {
+        const dishIds = this.state.dishes.map(dish => dish.id)
+        const userVotes = votes.filter(vote => vote.user_id === parseInt(this.props.userId))
+        const userVoted = userVotes.find(vote => dishIds.includes(vote.dish_id))
+        if (userVoted) {
+          this.setState({hasVoted: true})
+        } else {
+          this.setState({hasVoted: false})
+        }
+        console.log(this.state.hasVoted)
+        
+      })
 
         
     }
@@ -121,6 +142,32 @@ class Dishes extends React.Component {
         this.componentDidMount()
       }
     })
+
+  }
+
+  handleVote = event => {
+    event.preventDefault()
+    debugger;
+      // make a fetch
+      fetch("http://localhost:3001/votes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          user_id: parseInt(localStorage.loggedInUserId),
+          dish_id: parseInt(event.target.value)
+        })
+      }).then(res => res.json())
+      .then(data => {
+        if (data.errors) {
+          this.setState({
+            errors: data.errors
+          })
+        } else {
+          this.componentDidMount()
+        }
+      })
   }
   
 
@@ -132,7 +179,8 @@ class Dishes extends React.Component {
           {this.state.dishes.map((dish) => {
             return(
               <>
-              <p>{dish.name} {dish.votes_count}</p><button value={dish.id} onClick={this.props.handleVote}>Vote</button>
+              <p>{dish.name} {dish.votes_count}</p>
+              {this.state.hasVoted ? null : <button value={dish.id} onClick={this.handleVote}>Vote</button>}
               </>
             )
           })}
@@ -140,7 +188,8 @@ class Dishes extends React.Component {
 
 
 
-
+        {this.state.hasVoted ? <button>Delete Vote and Add Another Dish</button> :
+        <>
         { this.state.clicked 
           ? 
             <form onSubmit={ this.dishSubmitted }>
@@ -153,7 +202,8 @@ class Dishes extends React.Component {
               <input type="submit" />
             </form>
           : <button onClick={this.clicked}>Add Dish</button>
-        }
+        }</>
+      }
 
       </>)
     }
