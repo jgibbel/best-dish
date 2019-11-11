@@ -24,15 +24,18 @@ function RestaurantModal(props) {
         setRestaurantImage(rest.image)
         setRestaurantCategory(rest.category)
         setRestaurantBorough(rest.borough)
-      }),
+      })
     //
-    fetch(`http://localhost:3001/votes`)
-    .then(res => res.json())
-    .then(r => {
-      // debugger
-      null
-    })
+    // fetch(`http://localhost:3001/votes`)
+    // .then(res => res.json())
+    // .then(r => {
+    //   // debugger
+    //   return(null)
+    // })
   }, [])
+
+
+
     return (
       <div className="loginModal">
       <div className="modal-content">

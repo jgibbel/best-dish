@@ -9,6 +9,8 @@ function Nav(props) {
     <div className="fixedNav">
         <p>Hello {props.name}</p>
         <p>Filter select here</p>
+        <button onClick={()=> props.favoriteRestaurants()}>Favorite Restaurants</button>
+        <button onClick={()=> props.allRestaurants()}>See all</button>
     </div>)
 
 }
