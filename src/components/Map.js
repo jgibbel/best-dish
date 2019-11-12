@@ -6,13 +6,12 @@ function Map(props){
 
   console.log(props)
 
-  const {favRestaurants, restaurants, setFavState} = props
+  const {fetchFavoriteRestaurants, favRestaurants, restaurants, setFavState, favIDS} = props
   const [selectedRestaurant, setSelectedRestaurant] = useState(null)
 
-  const belongs = (target, array) => {
-
-    for(var i = 0; i < array.length; i++) {
-      if(array[i].id === target.id) {
+  const belongs = (selectedRestaurant, favorites) => {
+    for(var i = 0; i < favorites.length; i++) {
+      if(favorites[i].id === selectedRestaurant.id) {
         return true;
       }
     }
@@ -24,7 +23,7 @@ function Map(props){
   const addToFavorites = (restaurant) => {
     let user_id = localStorage.loggedInUserId
     let restaurant_id =  restaurant.id
-
+    
     fetch('http://localhost:3001/favorites', {
       method: 'POST',
       headers: {
@@ -38,7 +37,6 @@ function Map(props){
     })
     .then(res => res.json())
     .then(data => {
-      debugger
       console.log(data.restaurantObj)
       setSelectedRestaurant(null)
       setFavState(data.restaurantObj)
@@ -46,33 +44,30 @@ function Map(props){
   }
 
   const unFavorite = (restaurant) => {
-    let user_id = localStorage.loggedInUserId
-    let restaurant_id =  restaurant.id
 
-    fetch('http://localhost:3001/favorites', {
-      method: 'DESTROY',
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({
-        user_id: user_id,
-        restaurant_id: restaurant_id
-      })
+   
+    
+    let favorite = favIDS.find(fav => {
+      return fav.restaurant_id === restaurant.id
+    })
+
+    fetch(`http://localhost:3001/favorites/${favorite.id}`, {
+      method: 'DELETE'
     })
     .then(res => res.json())
     .then(data => {
-      debugger
-      console.log(data.restaurantObj)
+      console.log(data)
       setSelectedRestaurant(null)
-      setFavState(data.restaurantObj)
+      // setFavState(data.restaurantObj)
+      fetchFavoriteRestaurants()
+      
     })
   }
 
  return (
    <GoogleMap
      defaultZoom={13}
-     defaultCenter={{ lat: 40.712772, lng: -74.006058 }}
+     defaultCenter={{ lat: 40.764071, lng: -73.981581 }}
     >
       { restaurants.map(restaurant => (< Marker
         key={restaurant.id}

@@ -2,13 +2,19 @@ import React from 'react';
 import { WrappedMap } from './components/Map'
 
 
+
 export default class HomePage extends React.Component {
 
+  
+
   render(){
+    const API_KEY = process.env.REACT_APP_GOOGLE_KEY
 
     return(
       <div style={{width: '100vw', height: '100vw'}}>
         <WrappedMap
+          fetchFavoriteRestaurants={this.props.fetchFavoriteRestaurants}
+          favIDS={this.props.favIDS}
           setFavState={this.props.setFavState}
           allRest={this.props.allRest}
           favRestaurants={this.props.favRestaurants} 

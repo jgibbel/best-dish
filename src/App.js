@@ -15,6 +15,7 @@ export default class App extends React.Component {
     hasVoted: null,
     restaurants: [],
     favRestaurants: [],
+    favIDS: [],
     sendFav: false
   }
 
@@ -25,17 +26,23 @@ export default class App extends React.Component {
         this.setState({restaurants: restaurants})
       }) 
 
-    fetch(`http://localhost:3001/users/${localStorage.loggedInUserId}`)
+      if (localStorage.loggedInUserId) {
+        fetch(`http://localhost:3001/users/${localStorage.loggedInUserId}`)
       .then(res => res.json())
       .then(user => {
         console.log(user)
         if (user.error){
           return
         } else {
-          let favRestaurants = user.favorites.map(rest => rest.restaurantObj)
-        this.setState({favRestaurants: favRestaurants})
+          let favRestaurants = user.favorites.map(favorites => favorites)
+          let favIDS = user.favorites.map(favorites => favorites.id)
+        this.setState({favRestaurants: favRestaurants, favIDS: favIDS})
+        
         }
       })
+      }
+
+    
   }
 
   componentDidUpdate(){
@@ -43,15 +50,21 @@ export default class App extends React.Component {
   }
   
 
-  favoriteRestaurants = () => {
+  fetchFavoriteRestaurants = () => {
     this.setState({sendFav: true})
-    // this.setState({clickedFavorites: true})
-    // fetch(`http://localhost:3001/users/${localStorage.loggedInUserId}`)
-    //     .then(res => res.json())
-    //     .then(user => {
-    //       let favRestaurants = user.favorites.map(rest => rest.restaurantObj)
-    //       this.setState({favRestaurants: favRestaurants})
-    //     })
+    fetch(`http://localhost:3001/users/${localStorage.loggedInUserId}`)
+    .then(res => res.json())
+    .then(user => {
+      console.log(user)
+      if (user.error){
+        return
+      } else {
+        let favRestaurants = user.favorites.map(favorites => favorites.restaurantObj)
+        let favIDS = user.favorites.map(favorites => favorites)
+      this.setState({favRestaurants: favRestaurants, favIDS: favIDS})
+      
+      }
+    })
   }
 
   allRestaurants = ()=> {
@@ -73,25 +86,23 @@ export default class App extends React.Component {
 
  handleVote = event => {
   console.log("vote")
-  debugger
   }
 
   setFavState = (newRest) => {
     this.setState({favRestaurants: [...this.state.favRestaurants, newRest]})
-    debugger
   }
 
 
 
   render() {
-    const {restaurants, favRestaurants, sendFav} = this.state
+    const {restaurants, favRestaurants, sendFav, favIDS} = this.state
 
     return (
       <Router>
-          <HomePage setFavState={this.setFavState} favRestaurants={favRestaurants} allRest={restaurants} restaurants={sendFav ? favRestaurants : restaurants}/>
+          <HomePage fetchFavoriteRestaurants={this.fetchFavoriteRestaurants} favIDS={favIDS} setFavState={this.setFavState} favRestaurants={favRestaurants} allRest={restaurants} restaurants={sendFav ? favRestaurants : restaurants}/>
           <Switch>
             <Route exact path="/">
-              { localStorage.token || this.state.loggedInUserId ? <Nav allRestaurants={this.allRestaurants} favoriteRestaurants={this.favoriteRestaurants} name={this.state.loggedInUserName}/> : <Login gotToken={this.gotToken}/> }
+              { localStorage.token || this.state.loggedInUserId ? <Nav restaurants={this.state.restaurants} allRestaurants={this.allRestaurants} fetchFavoriteRestaurants={this.fetchFavoriteRestaurants} name={this.state.loggedInUserName}/> : <Login gotToken={this.gotToken}/> }
             </Route>
             <Route path="/:id">
               <RestaurantModal userId={this.state.loggedInUserId} handleVote={this.handleVote} />
