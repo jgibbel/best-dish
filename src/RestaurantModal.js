@@ -119,21 +119,22 @@ class Dishes extends React.Component {
       })
     }
 
-    // deleteVote = event => {
-    //   event.preventDefault()
-    
-    //   // make a fetch
-    //   fetch(`http://localhost:3001/votes/${this.state.userVoted.id}`, {
-    //     method: "DELETE",
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     }
-    //   })
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     debugger;
-    //   })
-    // }
+    deleteVote = event => {
+      event.preventDefault()
+      debugger;
+      // make a fetch
+      fetch(`http://localhost:3001/votes/${this.state.myVote.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        'Accept': 'application/json',
+      }})
+        .then(data => data.json())
+        .then(r => {
+          this.componentDidMount()
+        })
+ 
+    }
 
 
   dishSubmitted = (event) => {
@@ -166,7 +167,7 @@ class Dishes extends React.Component {
 
   handleVote = event => {
     event.preventDefault()
-    debugger;
+    // debugger;
       // make a fetch
       fetch("http://localhost:3001/votes", {
         method: "POST",

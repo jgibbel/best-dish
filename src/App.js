@@ -18,7 +18,7 @@ export default class App extends React.Component {
     sendFav: false
   }
 
-  componentDidMount(){
+  componentDidMount = () => {
     fetch('http://localhost:3001/restaurants')
       .then(res => res.json())
       .then(restaurants => {
@@ -28,11 +28,12 @@ export default class App extends React.Component {
     fetch(`http://localhost:3001/users/${localStorage.loggedInUserId}`)
       .then(res => res.json())
       .then(user => {
+        // debugger;
         if (user.error || user.message) {
           return
         } else {
           let favRestaurants = user.favorites.map(rest => rest.restaurantObj);
-          debugger;
+          // debugger;
         this.setState({favRestaurants: favRestaurants})
         }
       })
@@ -69,6 +70,7 @@ export default class App extends React.Component {
      loggedInUserId,
      loggedInUserName
    })
+   debugger;
  }
 
 
