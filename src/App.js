@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 //WrappedMap component takes care of
 // import { GoogleMap, withScript.js, withGoogleMap } from 'react-google-maps'
 import Navbar from './components/NavBar'
+import Login from './components/Login'
 import MapPage from './components/MapPage'
 import Default from './components/Default'
 // import { data } from './data'
@@ -16,37 +17,15 @@ export default class App extends React.Component {
   //Eventually, arrange container for Map display with inline styling
   render() {
     return (
-      <>
+      <div>
         <Navbar/>
-          <Switch>
-            <Route exact path='/' component={MapPage}/>
-            <Route component={Default}/>
-          </Switch>
-      </>
-    );
+        <Switch>
+          <Route path='/login' component={Login}/>
+          <Route exact path='/' component={MapPage}/>
+          <Route component={Default}/>
+        </Switch>
+      </div>
+
+    )
   }
 }
-
-
-
-
-  // Ideally we will have our state set in this component, so we can pass data to different component
-  
-  // state = {
-  //   restaurants: null
-  // }
-
-  // componentDidMount(){
-  //   this.setState({
-  //     restaurants: data
-  //   }, () => console.log(this.state.restaurants))
-  // }
-
-  // Embed WrappedMap variable and set default props
-
-
-
-
-
-
-//
